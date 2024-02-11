@@ -48,14 +48,14 @@ export class BrightspaceService implements CanActivate {
    *    Functions please.
    */
   constructor(private storage: Storage,
-    private iab: InAppBrowser,
-    private http: HttpClient,
-    private nhttp: HTTP,
-    private navCtrl: NavController,
-    private toastService: ToastService,
-    private splashScreen: SplashScreen,
-    private keyboard: Keyboard,
-    private statusBar: StatusBar) {
+              private iab: InAppBrowser,
+              private http: HttpClient,
+              private nhttp: HTTP,
+              private navCtrl: NavController,
+              private toastService: ToastService,
+              private splashScreen: SplashScreen,
+              private keyboard: Keyboard,
+              private statusBar: StatusBar) {
     this.appContext = new ApplicationContext(this.appID, this.appKey);
 
 
@@ -181,9 +181,9 @@ export class BrightspaceService implements CanActivate {
    *
    * Should only be called on welcome-slide.
    */
-  login() {
-    if (this.isDebugMode) {
-      const params = (PARAMS.Session.CallBackURLWithParams.split('?')[1]).split('&');
+  login(callBackURL?: string) {
+    if (callBackURL != null) {
+      const params = (callBackURL.split('?')[1]).split('&');
       this.setUserID(params[0].split('=')[1]);
       this.setUserKey(params[1].split('=')[1]);
       this.setSessionSkew(Util.calculateSkew(PARAMS.Session.CallBackURLWithParams));

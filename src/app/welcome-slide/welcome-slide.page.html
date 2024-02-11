@@ -1,76 +1,81 @@
+<ion-content fullscreen scroll-y="false">
 
-  <ion-content fullscreen scroll-y="false">
+    <ion-slides pager="true">
+        <ion-slide>
+            <ion-grid fixed>
 
-  <ion-slides pager="true">
-    <ion-slide>
-      <ion-grid fixed>
-
-      <h2>Welcome to</h2>
-      <h1 class="middle">My<span class="orange">TA</span>Space</h1>
-      <h1 class="swipe">Swipe right to get started.</h1>
-
-
-     
-      </ion-grid>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-grid fixed>
-
-      <img src="assets/person.png">
-      <h1 class="title">This is a <span class="orange">grading</span> app.</h1>
-      <h1 class="content">MyTASpace is a grading application designed for Teaching Assistants/Instructors at Wilfrid Laurier University. It focuses on creating a easier way to mark students on mobile devices.</h1>
-      
+                <h2>Welcome to</h2>
+                <h1 class="middle">My<span class="orange">TA</span>Space</h1>
+                <h1 class="swipe">Swipe right to get started.</h1>
 
 
-     
-      </ion-grid>
-    </ion-slide>
-    
-    
-    <ion-slide class="dark-page">
-      <ion-grid fixed>
+            </ion-grid>
+        </ion-slide>
 
-          <img src="assets/night.png">
-          <h1 class="title">We have <span class="orange">dark</span> mode.</h1>
-          <h1 class="content">Other than default color mode, MyTASpace also comes with a dark mode. It is a better user interface to use during night time. Go try it out in <span class="orange">Settings</span>!</h1>
+        <ion-slide>
+            <ion-grid fixed>
 
-      </ion-grid>
-      
-    </ion-slide>
+                <img src="assets/person.png">
+                <h1 class="title">This is a <span class="orange">grading</span> app.</h1>
+                <h1 class="content">MyTASpace is a grading application designed for Teaching Assistants/Instructors at
+                    Wilfrid Laurier University. It focuses on creating a easier way to mark students on mobile
+                    devices.</h1>
 
-    <ion-slide>
-        <ion-grid fixed>
-  
-            <img src="assets/search.png">
-            <h1 class="title">More <span class="orange">resources</span>!</h1>
-            <h1 class="content">MyTASpace provides a collection of useful links for golden hawks! For instance, MyLearningSpace and Visual Schedule Builder. They all can be accessed easily within the app.</h1>
-  
-        </ion-grid>
-        
-    </ion-slide>   
 
-    <ion-slide>
-        <ion-grid fixed>
-  
-            <img src="assets/technical-support.png" class="image_size2">
-            <h1 class="title">Help us <span class="orange">improve</span>.</h1>
-            <h1 class="content">If you encounter any problem while using MyTASpace, please send an error report to our development team using the <span class="orange">Contact Us</span> function in Settings. These reports help us improve and perfect our application over time. We really appreciate that!</h1>
-  
-        </ion-grid>
-        
-    </ion-slide>        
-    
+            </ion-grid>
+        </ion-slide>
 
-    <ion-slide> 
-      <ion-grid>  
 
-       
-      <h1 class="logo">My<span class="orange">TA</span>Space</h1>
-      <h1 class="slogan">MyLearningSpace marking made easy.</h1>
-      <ion-button fill="clear" class="login_button" (click)='login()' >  Get Started  <ion-icon slot="end" name="log-in"></ion-icon></ion-button>
-    </ion-grid>
-    </ion-slide>
-  </ion-slides>
+        <ion-slide class="dark-page">
+            <ion-grid fixed>
+
+                <img src="assets/night.png">
+                <h1 class="title">We have <span class="orange">dark</span> mode.</h1>
+                <h1 class="content">Other than default color mode, MyTASpace also comes with a dark mode. It is a better
+                    user interface to use during night time. Go try it out in <span class="orange">Settings</span>!</h1>
+
+            </ion-grid>
+
+        </ion-slide>
+
+        <ion-slide>
+            <ion-grid fixed>
+
+                <img src="assets/search.png">
+                <h1 class="title">More <span class="orange">resources</span>!</h1>
+                <h1 class="content">MyTASpace provides a collection of useful links for golden hawks! For instance,
+                    MyLearningSpace and Visual Schedule Builder. They all can be accessed easily within the app.</h1>
+
+            </ion-grid>
+
+        </ion-slide>
+
+        <ion-slide>
+            <ion-grid fixed>
+
+                <img src="assets/technical-support.png" class="image_size2">
+                <h1 class="title">Help us <span class="orange">improve</span>.</h1>
+                <h1 class="content">If you encounter any problem while using MyTASpace, please send an error report to
+                    our development team using the <span class="orange">Contact Us</span> function in Settings. These
+                    reports help us improve and perfect our application over time. We really appreciate that!</h1>
+
+            </ion-grid>
+
+        </ion-slide>
+
+
+        <ion-slide>
+            <ion-grid>
+
+
+                <h1 class="logo">My<span class="orange">TA</span>Space</h1>
+                <h1 class="slogan">MyLearningSpace marking made easy.</h1>
+                <ion-button fill="clear" class="login_button" (click)='login()'> Get Started
+                    <ion-icon slot="end" name="log-in"></ion-icon>
+                </ion-button>
+                <ion-input *ngIf="loginClicked==true" [(ngModel)]="URL" placeholder="Paste Callback URL here"></ion-input>
+            </ion-grid>
+        </ion-slide>
+    </ion-slides>
 
 </ion-content>

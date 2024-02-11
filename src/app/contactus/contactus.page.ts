@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { EmailComposer } from '@ionic-native/email-composer/ngx';
-import { version } from '../../../package.json';
+import {Component} from '@angular/core';
+import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
+import {EmailComposer} from '@ionic-native/email-composer/ngx';
+import {version} from '../../../package.json';
 
 @Component({
   selector: 'app-grading',
@@ -13,7 +13,8 @@ export class ContactusPage {
   currentImage = null;
 
   constructor(private camera: Camera,
-    private emailComposer: EmailComposer) { }
+              private emailComposer: EmailComposer) {
+  }
 
   captureImage() {
     const options: CameraOptions = {
@@ -36,14 +37,13 @@ export class ContactusPage {
       to: 'ziyaowangwayne@gmail.com',
       attachments: [this.currentImage],
       subject: 'MyTASpace Support: ',
-      body: 'Platform: ' + this.platform() + '\nVersion: ' + this.ver
-        + '\nPlease describe the issue you\'ve encountered with MyTASpace below:\n',
+      body: 'Platform: ' + this.platform() + '<br/>Version: ' + this.ver
+        + '<br/>Please describe the issue you\'ve encountered with MyTASpace below:\n',
       isHtml: true
     };
 
     this.emailComposer.open(email);
   }
-
 
 
   platform() {

@@ -1,35 +1,34 @@
 <ion-header>
-  <ion-toolbar color="secondary">
-    <ion-buttons slot="start" >
-      <ion-back-button color="tertiary" text="List"></ion-back-button>
-    </ion-buttons>
-    <ion-title color="tertiary">Grading {{gradeItemName}}</ion-title>
-  </ion-toolbar>
-  <ion-searchbar 
-    [(ngModel)]="searchTerm" 
-    (ionChange)="onSearchInput()"
-    (keyup.enter)="gradeFirst()"
-    mode="ios" 
-    placeholder="Name/WLU ID/Network login"
-    debounce = 50
-    animated = true
-  ></ion-searchbar>
-  <div *ngIf="searching" class="spinner-container" slot=end>
-    <ion-spinner color = "primary"></ion-spinner>
-  </div>
+    <ion-toolbar color="secondary">
+        <ion-buttons slot="start">
+            <ion-back-button color="tertiary" text="List"></ion-back-button>
+        </ion-buttons>
+        <ion-title color="tertiary">{{courseName}} - {{gradeItemName}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button color="tertiary" [routerDirection]="'forward'" [routerLink]="'/history/'+courseID+'/'+courseName">
+                <ion-icon color="tertiary" name="time">History</ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="onSearchInput()" (keyup.enter)="gradeFirst()" mode="ios"
+                   placeholder="Name/WLU ID/Network login" debounce=100 animated=true></ion-searchbar>
+    <div *ngIf="searching" class="spinner-container" slot=end>
+        <ion-spinner color="primary"></ion-spinner>
+    </div>
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" color = "primary">
-      <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-list>
-    <ion-item *ngFor="let item of gradingUsers" (click)="gradeChangePrompt(item.Identifier)">
-      {{item.Name}}
-      <div class="item-note" slot="end">
-      {{item.currGrade}}/{{this.maxGrade}}
-      </div>
-    </ion-item>
-  </ion-list>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" color="primary">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-list>
+        <ion-item *ngFor="let item of gradingUsers" (click)="gradeChangePrompt(item.Identifier)">
+            {{item.Name}}
+            <div class="item-note" slot="end">
+                <ion-badge class="badge" [color]="item.currGrade == 0 ? 'danger' : 'white'"
+                           mode="ios">{{item.currGrade}}/{{this.maxGrade}}</ion-badge>
+            </div>
+        </ion-item>
+    </ion-list>
 
 </ion-content>

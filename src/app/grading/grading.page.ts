@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {OrganizationService} from '../organization.service';
-import {AlertController} from '@ionic/angular';
-import {ActivatedRoute} from '@angular/router';
-import {HTTP, HTTPResponse} from '@ionic-native/http/ngx';
-import {BrightspaceService} from '../brightspace.service';
-import {ToastService} from '../toast.service';
+import { Component, OnInit } from '@angular/core';
+import { OrganizationService } from '../organization.service';
+import { AlertController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
+import { BrightspaceService } from '../brightspace.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-grading',
@@ -16,6 +16,7 @@ export class GradingPage implements OnInit {
   gradingUsers: Array<{ Name; WLUID: string; Identifier: string; WLUEmail: string; gradeItemId: string; gradeOutOf: string; currGrade: string }> = [];
   searchTerm: any;
   courseID = null;
+  courseName = '';
   gradeItemID = null;
   gradeItemName = '';
   maxGrade = null;
@@ -31,8 +32,10 @@ export class GradingPage implements OnInit {
   ) {
     this.gradingUsers = [];
     this.courseID = this.activatedRoute.snapshot.paramMap.get('courseID');
+    this.courseName = this.activatedRoute.snapshot.paramMap.get('courseName');
+    this.courseName = this.courseName.substring(0, 6).replace('-', '');
     this.gradeItemID = this.activatedRoute.snapshot.paramMap.get('gradeItemID');
-    this.gradeItemName = this.activatedRoute.snapshot.paramMap.get('Name');
+    this.gradeItemName = this.activatedRoute.snapshot.paramMap.get('GradeItemName');
     console.log('Grade Item Name: ', this.gradeItemName);
     this.maxGrade = Number(this.activatedRoute.snapshot.paramMap.get('maxGrade'));
     this.allowExceed = this.activatedRoute.snapshot.paramMap.get('allowExceed') === 'true';
@@ -63,7 +66,7 @@ export class GradingPage implements OnInit {
     const user = this.gradingUsers.find(x => x.Identifier === Identifier);
     const alert = await this.alertController.create({
       header: user.Name,
-      message: user.WLUID + ' Current Mark: <strong>' + user.currGrade + '</strong>',
+      message: user.WLUID + '<br/>Current Mark: <strong>' + user.currGrade + '</strong>',
       cssClass: 'myNormalPrompt',
       inputs: [
         {
@@ -106,7 +109,7 @@ export class GradingPage implements OnInit {
     const alert = await this.alertController.create({
       header: user.Name,
       subHeader: 'The value entered is not valid. Please re-enter. \n',
-      message: user.WLUID + '\n Current Mark: <strong>' + user.currGrade + '</strong>',
+      message: user.WLUID + '<br/> Current Mark: <strong>' + user.currGrade + '</strong>',
       cssClass: 'myAlertPrompt',
       inputs: [
         {
@@ -127,7 +130,6 @@ export class GradingPage implements OnInit {
         }, {
           text: 'Submit',
           handler: (data) => {
-            // TODO: Call function to check if there's mergge conflict&update server with new mark.
             console.log('Confirm Ok. New Grade: ' + data.newGrade);
             if (this.orgService.validateGradeInput(data.newGrade, this.maxGrade, this.allowExceed)) {
               console.log('Grade passed validation. Attempting to update the mark server-side.');
@@ -175,9 +177,10 @@ export class GradingPage implements OnInit {
               },
               GradeObjectType: 1,
               PointsNumerator: Number(newGrade)
-            }, {} ).then(() => {
+            }, {}).then(() => {
               this.toastService.showNormalToast('Grade Updated.');
               this.orgService.updateGradingPage(this.courseID, this.gradeItemID);
+              this.searchTerm = '';
             }, (err: HTTPResponse) => {
               if (err.status === 403) {
                 this.toastService.showWarningToast('Weird. You are not allowed to update the marks of this grade item.');
@@ -209,7 +212,7 @@ export class GradingPage implements OnInit {
     const gradeOnServerURL = this.bService.userContext.createAuthenticatedUrl('/d2l/api/le/1.35/' + this.courseID + '/grades/' + this.gradeItemID + '/values/' + Identifier, 'get');
     let gradeOnServer = 0;
     let jsonResponse;
-    await this.http.get('https://' + gradeOnServerURL, {}, {'Content-Type': 'application/json'}).then(data => {
+    await this.http.get('https://' + gradeOnServerURL, {}, { 'Content-Type': 'application/json' }).then(data => {
       jsonResponse = JSON.parse(data.data);
       gradeOnServer = jsonResponse.PointsNumerator;
     }, (err: HTTPResponse) => {
@@ -225,7 +228,7 @@ export class GradingPage implements OnInit {
     this.http.put('https://' + url, {
       GradeObjectType: '1',
       PointsNumerator: newGrade
-    }, {'Content-Type': 'application/json'} ).then(() => {
+    }, { 'Content-Type': 'application/json' }).then(() => {
       this.toastService.showNormalToast('Grade updated for ' + user.Name + '.');
       this.orgService.updateGradingPage(this.courseID, this.gradeItemID);
     }, (err: HTTPResponse) => {
@@ -235,12 +238,12 @@ export class GradingPage implements OnInit {
         this.toastService.showWarningToast('User/course/gradeItem Not found. Please restart the app and try again. If you still get this prompt, contact us.');
       } else if (err.status === 400) {
         this.toastService.showWarningToast('Grade type mismatch. This app only supports numeric grade type at the moment. ');
-        prompt("Hey. Sorry to bother you again.\nWe do not currently support grade types other than numeric. \nIf you would like us to support grade types other than numeric, please send us a email in the Contact Us page in Settings and describe how often do you encounter/set up grade types that are not numeric.");
+        prompt('Hey. Sorry to bother you again.<br/>We do not currently support grade types other than numeric. <br/>If you would like us to support grade types other than numeric, please send us a email in the Contact Us page in Settings and describe how often do you encounter/set up grade types that are not numeric.');
         // prompt(JSON.stringify(err.headers));
         // prompt(JSON.stringify(err.data));
         // prompt(err.url);
         // prompt(err.error);
-      }  else {
+      } else {
         this.toastService.showWarningToast('Cannot reach MyLS server. Please check your connection or MyLS status.');
       }
     });

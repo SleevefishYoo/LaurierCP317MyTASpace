@@ -20,7 +20,8 @@ export class ThemeService {
       tertiary: '#f4f5f8',
       dark: '#222428',
       medium: '#989aa2',
-      light: '#f4f5f8'
+      light: '#f4f5f8',
+      labeltext: '#F7F7FF'
     },
 
     dark: {
@@ -29,7 +30,8 @@ export class ThemeService {
       tertiary: '#FF9900',
       medium: '#676A6D',
       dark: '#F7F7FF',
-      light: '#212121'
+      light: '#212121',
+      labeltext: '#F7F7FF'
     }
   };
 
