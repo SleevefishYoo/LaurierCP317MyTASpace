@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { isNumeric } from 'rxjs/util/isNumeric';
-import { ToastController } from '@ionic/angular';
-import { BrightspaceService } from './brightspace.service';
-import { ToastService } from './toast.service';
-import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {isNumeric} from 'rxjs/util/isNumeric';
+import {ToastController, ModalController} from '@ionic/angular';
+import {BrightspaceService} from './brightspace.service';
+import {ToastService} from './toast.service';
+import {HTTP, HTTPResponse} from '@ionic-native/http/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -25,22 +25,23 @@ export class OrganizationService {
   public gradeItems = [];
 
   constructor(private bService: BrightspaceService,
-    private toastService: ToastService,
-    private http: HTTP) {
+              private toastService: ToastService,
+              private http: HTTP,
+              private modalController: ModalController) {
     this.http.setDataSerializer('json');
   }
 
   /**
    * Called when user enters Grading page from List page or refreshes the Grading page.
    * Should only be called after the UserContext is created.
-   * We need the info of current gradeItem because user's grades does not contain gradeItemIdand when the mark is dropped by setting the gradeItem to disregard the lowest score, 
+   * We need the info of current gradeItem because user's grades does not contain gradeItemIdand when the mark is dropped by setting the gradeItem to disregard the lowest score,
    * that score is counted as out of 0. So we need to grab the pointsNumerator from the GradeItem.
    * Users are updated by:
    * 1. Requesting the info of the current GradeItem, stores the response to itemJsonResponse; Requesting the usergrades, store them in jsonResponse(Nameing could be done better)
    * 2. Parse them they way described above, the store them in gradingUsers.
    * 3. gradingUsersFilteredSubject = gradingUsers because the list that's actually displayed on gradingPage is gradingUsersFilteredSubject.
    * 4. call gradingUsersFilteredSubject.next to notify gradingPage to update their copy.
-   * 
+   *
    * @param courseID courseID
    * @param gradeItemID grade item ID
    */
@@ -52,7 +53,7 @@ export class OrganizationService {
     const itemUrl = this.bService.userContext.createAuthenticatedUrl('/d2l/api/le/1.35/' + courseID + '/grades/' + gradeItemID, 'get');
     let url = this.bService.userContext.createAuthenticatedUrl('/d2l/api/le/1.35/' + courseID + '/grades/' + gradeItemID + '/values/?sort=lastname&pageSize=200', 'get');
     while (url != null) {
-      await this.http.get('https://' + url, {}, { 'Content-Type': 'application/json' }).then(data => {
+      await this.http.get('https://' + url, {}, {'Content-Type': 'application/json'}).then(data => {
         jsonResponse = data.data;
       }, (err: HTTPResponse) => {
         if (err.status === 404) {
@@ -67,7 +68,7 @@ export class OrganizationService {
         }
       });
 
-      await this.http.get('https://' + itemUrl, {}, { 'Content-Type': 'application/json' }).then(data => {
+      await this.http.get('https://' + itemUrl, {}, {'Content-Type': 'application/json'}).then(data => {
         itemJsonResponse = data.data;
       }, (err: HTTPResponse) => {
         if (err.status === 403) {
@@ -78,12 +79,16 @@ export class OrganizationService {
         }
       });
 
-      if (jsonResponse === '' || itemJsonResponse === '') { return; }
+      if (jsonResponse === '' || itemJsonResponse === '') {
+        return;
+      }
       const userGrades: GradeItemUserValues = JSON.parse(jsonResponse);
       const gradeItem = JSON.parse(itemJsonResponse);
       for (const userGrade of userGrades.Objects) {
         let currentGrade = 0;
-        if (JSON.stringify(userGrade.GradeValue) !== 'null') { currentGrade = userGrade.GradeValue.PointsNumerator; }
+        if (JSON.stringify(userGrade.GradeValue) !== 'null') {
+          currentGrade = userGrade.GradeValue.PointsNumerator;
+        }
         this.gradingUsers.push({
           Name: userGrade.User.DisplayName,
           WLUID: userGrade.User.OrgDefinedId,
@@ -109,16 +114,16 @@ export class OrganizationService {
    * 1. requesting info from server
    * 2. catagorize the returened items and store them in gradeItemsMenuItems
    * 3. call gradeItemsMenuSubject.next to notify listPage to update.
-   * the final gradeItemsMenuItems contains dividers to devide different types of gradeItems (Labs/Asgns/Others). 
+   * the final gradeItemsMenuItems contains dividers to devide different types of gradeItems (Labs/Asgns/Others).
    * Dividers have the property gradeItemID set to '000000' and Name of theuir respective catagories.
-   * 
+   *
    * @param courseID course ID
    */
   async updateGradeItems(courseID: number) {
     this.gradeItems = [];
     let jsonResponse = '';
     const url = this.bService.userContext.createAuthenticatedUrl('/d2l/api/le/1.35/' + courseID + '/grades/', 'get');
-    await this.http.get('https://' + url, {}, { 'Content-Type': 'application/json' }).then(data => {
+    await this.http.get('https://' + url, {}, {'Content-Type': 'application/json'}).then(data => {
       jsonResponse = data.data;
     }, (err: HTTPResponse) => {
       if (err.status === 404) {
@@ -221,7 +226,7 @@ export class OrganizationService {
 
     // sort each array here
     this.labItems.sort((a, b) => {
-      if (a.Name > b.Name) {
+      if (a.Name.length > b.Name.length || a.Name > b.Name) {
         return 1;
       }
       if (a.Name < b.Name) {
@@ -231,7 +236,7 @@ export class OrganizationService {
     });
 
     this.assignmentItems.sort((a, b) => {
-      if (a.Name > b.Name) {
+      if (a.Name.length > b.Name.length || a.Name > b.Name) {
         return 1;
       }
       if (a.Name < b.Name) {
@@ -241,7 +246,7 @@ export class OrganizationService {
     });
 
     this.otherItems.sort((a, b) => {
-      if (a.Name > b.Name) {
+      if (a.Name.length > b.Name.length || a.Name > b.Name) {
         return 1;
       }
       if (a.Name < b.Name) {
@@ -259,7 +264,6 @@ export class OrganizationService {
   }
 
 
-
   filterItems(searchTerm: string) {
     console.log('filtering with term: ' + searchTerm);
     if (searchTerm === '') {
@@ -274,11 +278,16 @@ export class OrganizationService {
   }
 
   validateGradeInput(newGrade: string, maxGrade: number, canExceed: boolean): boolean {
-    if (newGrade === '' || !isNumeric(newGrade)) { return false; }
-    if (!canExceed && Number(newGrade) > maxGrade) { return false; }
+    if (newGrade === '' || !isNumeric(newGrade)) {
+      return false;
+    }
+    if (!canExceed && Number(newGrade) > maxGrade) {
+      return false;
+    }
     return Number(newGrade) >= 0;
   }
 }
+
 interface GradeItemUserValues {
   Objects: [{
     User: {
@@ -310,4 +319,20 @@ interface GradeItemUserValues {
     }
   }];
   Next;
+}
+
+export interface HistoryItem {
+  CourseName: string;
+  GradeItems: [{
+    itemID: number,
+    itemName: string,
+    Entries: [{
+      studentName: string,
+      studentID: number,
+      studentEmail: string,
+      time: string,
+      oldScore: string,
+      newScore: string
+    }]
+  }];
 }

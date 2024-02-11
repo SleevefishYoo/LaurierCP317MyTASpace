@@ -30,7 +30,7 @@ const routes: Routes = [
     canActivate: [LoginGuardService]
   },
   {
-    path: 'grading/:courseID/:gradeItemID/:maxGrade/:allowExceed/:Name',
+    path: 'grading/:courseID/:gradeItemID/:maxGrade/:allowExceed/:GradeItemName/:courseName',
     loadChildren: './grading/grading.module#GradingPageModule',
     canActivate: [BrightspaceService]
   },
@@ -48,8 +48,19 @@ const routes: Routes = [
     path: 'test',
     loadChildren: './test/test.module#TestPageModule',
     canActivate: [BrightspaceService]
-  }
+  },
+  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
 
+  {
+    path: 'history/:courseID/:courseName',
+    loadChildren: './history/history.module#HistoryPageModule',
+    canActivate: [BrightspaceService]
+  },
+  {
+    path: 'history/:courseID/:courseName/:itemID/:itemName',
+    loadChildren: './history/history.module#HistoryPageModule',
+    canActivate: [BrightspaceService]
+  },
 
 ];
 

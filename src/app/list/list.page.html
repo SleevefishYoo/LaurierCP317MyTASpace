@@ -1,76 +1,80 @@
 <ion-header>
-  <ion-toolbar color="secondary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="home" text="Home" color="tertiary"></ion-back-button>
-    </ion-buttons>
-    <ion-title color="tertiary">{{courseName}} </ion-title>
-  </ion-toolbar>
-  <div *ngIf="loading" class="spinner-container" slot=end>
-      <ion-spinner color = "primary"></ion-spinner>
-  </div>
+    <ion-toolbar color="secondary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="home" text="Home" color="tertiary"></ion-back-button>
+        </ion-buttons>
+        <ion-title color="tertiary">{{courseName}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button color="tertiary" [routerDirection]="'forward'" [routerLink]="'/history/'+courseID+'/'+courseName">
+                <ion-icon color="tertiary" name="time" >History</ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <div *ngIf="loading" class="spinner-container" slot=end>
+        <ion-spinner color="primary"></ion-spinner>
+    </div>
 </ion-header>
 
-<ion-content >
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" color = "primary">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-list>
+<ion-content>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" color="primary">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-list>
 
-    <!-- lab -->
+        <!-- lab -->
 
-    <ion-item-group *ngFor="let item of gradeItemList">
-      <ion-item *ngIf="item.Name == 'Lab' && item.gradeItemID == '000000'">
-        <ion-icon name="flask" color= primary></ion-icon>
-        <ion-list-header class="lab-divider">{{item.Name}}</ion-list-header>
-      </ion-item>
-    </ion-item-group>
+        <ion-item-group *ngFor="let item of gradeItemList">
+            <ion-item *ngIf="item.Name == 'Lab' && item.gradeItemID == '000000'">
+                <ion-icon name="flask" color=primary></ion-icon>
+                <ion-list-header class="lab-divider">{{item.Name}}</ion-list-header>
+            </ion-item>
+        </ion-item-group>
 
-    <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
-      [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name">
-      <ion-item
-        *ngIf="(item.Name.indexOf('L') == 0 || item.Name.toLowerCase().includes(lab)) && item.gradeItemID != '000000'">
-        <ion-icon name="null"></ion-icon>
-        {{ item.Name}}
-      </ion-item>
-    </ion-item-group>
+        <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
+                        [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name+'/'+courseName">
+            <ion-item
+                    *ngIf="(item.Name.indexOf('L') == 0 || item.Name.toLowerCase().includes('lab')) && item.gradeItemID != '000000'">
+                <ion-icon name="null"></ion-icon>
+                {{ item.Name}}
+            </ion-item>
+        </ion-item-group>
 
-    <!-- Assignment  -->
-    <ion-item-group *ngFor="let item of gradeItemList">
-      <ion-item *ngIf="item.Name == 'Assignment' && item.gradeItemID == '000000'">
-        <ion-icon name="checkmark-circle-outline" color = primary></ion-icon>
-        <ion-list-header class="assignment-divider">Assignment</ion-list-header>
-      </ion-item>
-    </ion-item-group>
+        <!-- Assignment  -->
+        <ion-item-group *ngFor="let item of gradeItemList">
+            <ion-item *ngIf="item.Name == 'Assignment' && item.gradeItemID == '000000'">
+                <ion-icon name="checkmark-circle-outline" color=primary></ion-icon>
+                <ion-list-header class="assignment-divider">Assignment</ion-list-header>
+            </ion-item>
+        </ion-item-group>
 
-    <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
-      [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name">
-      <ion-item
-        *ngIf="(item.Name.indexOf('A') == 0 || item.Name.toLowerCase().includes('assignment') )&& item.gradeItemID != '000000'">
-        <ion-icon name="null"></ion-icon>
-        {{ item.Name}}
-      </ion-item>
-    </ion-item-group>
-
-
-    <!-- Other -->
-    <ion-item-group *ngFor="let item of gradeItemList">
-      <ion-item *ngIf="item.Name == 'Other' && item.gradeItemID == '000000'">
-        <ion-icon name="apps" color=primary></ion-icon>
-        <ion-list-header class="others-divider">Other</ion-list-header>
-      </ion-item>
-    </ion-item-group>
-
-    <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
-      [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name">
-      <ion-item
-        *ngIf="item.Name.indexOf('A') != 0 && item.Name.indexOf('L') != 0 && !item.Name.toLowerCase().includes('assignment') && !item.Name.toLowerCase().includes('lab') && item.gradeItemID != '000000'">
-        <ion-icon name="null"></ion-icon>
-        {{ item.Name}}
-      </ion-item>
-    </ion-item-group>
+        <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
+                        [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name+'/'+courseName">
+            <ion-item
+                    *ngIf="(item.Name.indexOf('A') == 0 || item.Name.toLowerCase().includes('assignment') )&& item.gradeItemID != '000000'">
+                <ion-icon name="null"></ion-icon>
+                {{ item.Name}}
+            </ion-item>
+        </ion-item-group>
 
 
+        <!-- Other -->
+        <ion-item-group *ngFor="let item of gradeItemList">
+            <ion-item *ngIf="item.Name == 'Other' && item.gradeItemID == '000000'">
+                <ion-icon name="apps" color=primary></ion-icon>
+                <ion-list-header class="others-divider">Other</ion-list-header>
+            </ion-item>
+        </ion-item-group>
 
-  </ion-list>
+        <ion-item-group *ngFor="let item of gradeItemList" [routerDirection]="'forward'"
+                        [routerLink]="'/grading/'+courseID+'/'+item.gradeItemID+'/'+item.maxGrade+'/'+item.allowExceed+'/'+item.Name+'/'+courseName">
+            <ion-item
+                    *ngIf="item.Name.indexOf('A') != 0 && item.Name.indexOf('L') != 0 && !item.Name.toLowerCase().includes('assignment') && !item.Name.toLowerCase().includes('lab') && item.gradeItemID != '000000'">
+                <ion-icon name="null"></ion-icon>
+                {{ item.Name}}
+            </ion-item>
+        </ion-item-group>
+
+
+    </ion-list>
 
 </ion-content>

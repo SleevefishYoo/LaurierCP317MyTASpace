@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { OrganizationService } from '../organization.service';
-import { Storage } from '@ionic/storage';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {OrganizationService} from '../organization.service';
+import {Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-list',
@@ -13,6 +13,7 @@ export class ListPage implements OnInit {
   courseID = 0;
   loading = true;
   courseName = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private orgService: OrganizationService,
